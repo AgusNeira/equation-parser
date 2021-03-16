@@ -35,11 +35,14 @@ export function parenthesis(str) {
     return nodes;
 }
 
-let str = "((x + 5) / (3 - y)) = 2";
-console.log(str);
-console.log(bracketEvaluator(str));
+import { fileURLToPath } from 'url';
 
-str = "(1 / x) = y ^ (2)"
-console.log(str);
-console.log(bracketEvaluator(str));
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+    let str = "((x + 5) / (3 - y)) = 2";
+    console.log(str);
+    console.log(parenthesis(str));
 
+    str = "(1 / x) = y ^ (2)"
+    console.log(str);
+    console.log(parenthesis(str));
+}
