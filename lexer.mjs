@@ -113,7 +113,6 @@ export function lexer(expression) {
 }
 
 import { fileURLToPath } from 'url';
-import { parenthesis } from './parenthesis.mjs';
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
     let str = "((x + 5) / (3 - y)) = 2";
