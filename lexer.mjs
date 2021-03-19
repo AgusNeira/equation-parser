@@ -7,13 +7,6 @@ export function lexer(expression) {
         PARENTHESIS_OPEN: 'paren_open',
         PARENTHESIS_CLOSE: 'paren_close'
     };
-    const unary_operators = { plus: '+', minus: '-' };
-    const binary_operators = {
-        plus: '+', minus: '-',
-        multiply: '*', divide: '/',
-        exp: '^', equal: '='
-    };
-    const parens = { left: '(', right: ')' };
 
     let tokens = [];
     let lastToken = () => tokens[tokens.length - 1];
@@ -24,68 +17,67 @@ export function lexer(expression) {
 
     while (index < expression.length) {
         if (expression[index] === ' ') index++;
-        else if (expression[index] === parens.left) {
+
+        else if (expression[index] === '(') {
             tokens.push({
                 type: node_types.PARENTHESIS_OPEN,
             });
             index++;
-        } else if (expression[index] === parens.right) {
+        } else if (expression[index] === ')') {
             tokens.push({
                 type: node_types.PARENTHESIS_CLOSE,
             });
             index++;
-        } else if (expression[index] === binary_operators.plus) {
-            let last = lastToken();
-            if (last.type === node_types.LITERAL || last.type === node_types.VARIABLE
-                || last.type === node_types.PARENTHESIS_CLOSE) {
+        } else if (expression[index] === '+') {
+            if (tokens.length === 0 ||
+                lastToken().type === 'paren_open') {
                 tokens.push({
-                    type: node_types.BINARY_OPERATOR,
-                    operator: binary_operators.plus
+                    type: node_types.UNARY_OPERATOR,
+                    operator: '+'
                 });
             } else {
                 tokens.push({
-                    type: node_types.UNARY_OPERATOR,
-                    operator: unary_operators.plus
+                    type: node_types.BINARY_OPERATOR,
+                    operator: '+'
                 });
             }
             index++;
-        } else if (expression[index] === binary_operators.minus) {
-            let last = lastToken();
-            if (last.type === node_types.LITERAL || last.type === node_types.VARIABLE
-                || last.type === node_types.PARENTHESIS_CLOSE) {
+        } else if (expression[index] === '-') {
+            if (tokens.length === 0 ||
+                lastToken().type === 'paren_open') {
                 tokens.push({
-                    type: node_types.BINARY_OPERATOR,
-                    operator: binary_operators.minus
+                    type: node_types.UNARY_OPERATOR,
+                    operator: '-'
                 });
             } else {
                 tokens.push({
-                    type: node_types.UNARY_OPERATOR,
-                    operator: unary_operators.minus
+                    type: node_types.BINARY_OPERATOR,
+                    operator: '-'
                 });
             }
             index++;
-        } else if (expression[index] === binary_operators.multiply) {
+        } else if (expression[index] === '*') {
             tokens.push({
                 type: node_types.BINARY_OPERATOR,
-                operator: binary_operators.multiply
+                operator: '*'
             });
             index++;
-        } else if (expression[index] === binary_operators.divide) {
+        } else if (expression[index] === '/') {
             tokens.push({
                 type: node_types.BINARY_OPERATOR,
-                operator: binary_operators.divide
+                operator: '/'
             });
             index++;
-        } else if (expression[index] === binary_operators.exp) {
+        } else if (expression[index] === '^') {
             tokens.push({
                 type: node_types.BINARY_OPERATOR,
-                operator: binary_operators.exp
+                operator: '^'
             });
             index++;
-        } else if (expression[index] === binary_operators.equal) {
+        } else if (expression[index] === '=') {
             tokens.push({
                 type: node_types.BINARY_OPERATOR,
-                operator: binary_operators.equal
+                operator: '='
             });
             index++;
         } else if (expression.charCodeAt(index) >= 97 &&
