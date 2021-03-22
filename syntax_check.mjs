@@ -17,10 +17,14 @@ function syntax_check(tokens) {
             }
         } else if (tokens[i].type === 'binary_op' ||
                    tokens[i].type === 'unary_op') {
-            if (tokens[i].operator !== '=' &&
-                (tokens[i + 1].type === 'binary_op' ||
-                tokens[i + 1].type === 'unary_op')) {
+            if (tokens[i + 1].type === 'binary_op' ||
+                tokens[i + 1].type === 'unary_op') {
                 throw Error(`Cannot parse consecutive operators at index ${i}`);
+            }
+
+            if (tokens[i].type === 'unary_op' &&
+                i === tokens.length - 1) {
+                throw Error("Can't have unary operator at the end of expression");
             }
         } else if (tokens[i].type === 'literal') {
             if (tokens[i + 1].type === 'paren_open' ||

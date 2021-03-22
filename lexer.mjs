@@ -74,12 +74,6 @@ export function lexer(expression) {
                 operator: '^'
             });
             index++;
-        } else if (expression[index] === '=') {
-            tokens.push({
-                type: node_types.BINARY_OPERATOR,
-                operator: '='
-            });
-            index++;
         } else if (expression.charCodeAt(index) >= 97 &&
                    expression.charCodeAt(index) <= 122){
             tokens.push({
