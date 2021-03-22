@@ -101,15 +101,15 @@ export function lexer(expression) {
 import { fileURLToPath } from 'url';
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    let str = "((x + 5) / (3 - y)) = 2";
+    let str = "((x + 5) / (3 - y))";
     console.log(str);
     console.log(lexer(str));
 
-    str = "(-(-x + 5) / (-3 + y)) = -2";
+    str = "(-(-x + 5) / (-3 + y))";
     console.log(str);
     console.log(lexer(str));
 
-    str = "(x + 3 * x)(-9 - x) = 43"
+    str = "(x + 3 * x)(-9 - x)"
     console.log(str);
     console.log(lexer(str));
 }
