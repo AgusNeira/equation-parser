@@ -49,7 +49,7 @@ const parseBinaryExpression = precedence => (node, index, siblings) => {
     return index + 1;
 }
 
-function parse(tokens) {
+export function parse(tokens) {
     let parse_tree = tokens.slice();
 
     const node_types = {
@@ -93,7 +93,11 @@ function parse(tokens) {
             }
         });
     }
-    return parse_tree;
+
+    if (parse_tree.length !== 1)
+        throw Error("Wrong parse! more than one level one block");
+
+    return parse_tree[0];
 }
 
 import { fileURLToPath } from 'url';
