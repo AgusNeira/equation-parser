@@ -2,8 +2,8 @@ export function lexer(expression) {
     const node_types = {
         LITERAL: 'literal',
         VARIABLE: 'variable',
-        UNARY_OPERATOR: 'unary_op',
-        BINARY_OPERATOR: 'binary_op',
+        UNARY_OPERATOR: 'unary_operator',
+        BINARY_OPERATOR: 'binary_operator',
         PARENTHESIS_OPEN: 'paren_open',
         PARENTHESIS_CLOSE: 'paren_close'
     };

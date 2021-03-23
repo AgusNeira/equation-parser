@@ -11,18 +11,18 @@ export function syntax_check(tokens) {
                 tokens[i + 1].type === 'literal' ||
                 tokens[i + 1].type === 'variable') {
                 tokens.splice(i + 1, 0, {
-                    type: 'binary_op',
+                    type: 'binary_operator',
                     operator: '*'
                 });
             }
-        } else if (tokens[i].type === 'binary_op' ||
-                   tokens[i].type === 'unary_op') {
-            if (tokens[i + 1].type === 'binary_op' ||
-                tokens[i + 1].type === 'unary_op') {
+        } else if (tokens[i].type === 'binary_operatorerator' ||
+                   tokens[i].type === 'unary_operator') {
+            if (tokens[i + 1].type === 'binary_operator' ||
+                tokens[i + 1].type === 'unary_operator') {
                 throw Error(`Cannot parse consecutive operators at index ${i}`);
             }
 
-            if (tokens[i].type === 'unary_op' &&
+            if (tokens[i].type === 'unary_operator' &&
                 i === tokens.length - 1) {
                 throw Error("Can't have unary operator at the end of expression");
             }
@@ -30,7 +30,7 @@ export function syntax_check(tokens) {
             if (tokens[i + 1].type === 'paren_open' ||
                 tokens[i + 1].type === 'variable') {
                 tokens.splice(i + 1, 0, {
-                    type: 'binary_op', operator: '*'
+                    type: 'binary_operator', operator: '*'
                 });
             }
         } else if (tokens[i].type === 'variable') {
@@ -38,7 +38,7 @@ export function syntax_check(tokens) {
                 tokens[i + 1].type === 'literal' ||
                 tokens[i + 1].type === 'paren_open') {
                 tokens.splice(i + 1, 0, {
-                    type: 'binary_op', operator: '*'
+                    type: 'binary_operator', operator: '*'
                 });
             }
         }
