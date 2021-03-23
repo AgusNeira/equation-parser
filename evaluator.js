@@ -1,6 +1,6 @@
-import { lexer } from './lexer.mjs';
-import { syntax_check } from './syntax_check.mjs';
-import { parse } from './parse.mjs';
+const { lexer } = require('./lexer.js');
+const { syntax_check } = require('./syntax_check.js');
+const { parse } = require('./parse.js');
 
 function traverse(node, expected_vars) {
     if (node.type === 'block') {
@@ -55,9 +55,9 @@ function evaluate(expression, expected_variables) {
     };
 }
 
-import { fileURLToPath } from 'url';
+module.exports = { evaluate };
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (!module.parent) {
     let str = "((x + 5) / (3 - y))";
     console.log(str);
     let expression = evaluate(str, ['x', 'y']);

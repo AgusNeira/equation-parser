@@ -1,4 +1,4 @@
-export function syntax_check(tokens) {
+function syntax_check(tokens) {
     let level = 0;
     for (let i = 0; i < tokens.length - 1; i++) {
         if (tokens[i].type === 'paren_open') {
@@ -46,10 +46,11 @@ export function syntax_check(tokens) {
     return tokens;
 }
 
-import { fileURLToPath } from 'url';
-import { lexer } from './lexer.mjs';
+module.exports = { syntax_check };
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+const { lexer } = require('./lexer.js');
+
+if (!module.parent) {
     let str = "((x + 5) / (3 - y))";
     console.log(str);
     console.log(lexer(str));

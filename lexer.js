@@ -1,4 +1,4 @@
-export function lexer(expression) {
+function lexer(expression) {
     const node_types = {
         LITERAL: 'literal',
         VARIABLE: 'variable',
@@ -98,9 +98,9 @@ export function lexer(expression) {
     return tokens;
 }
 
-import { fileURLToPath } from 'url';
+module.exports = { lexer };
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (!module.parent) {
     let str = "((x + 5) / (3 - y))";
     console.log(str);
     console.log(lexer(str));
