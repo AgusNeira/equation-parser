@@ -1,5 +1,5 @@
-import { evaluate } from './evaluate.mjs';
-import { parse } from './parse.mjs';
+const { evaluate } = require('./evaluate.mjs');
+const { parse } = require('./parse.mjs');
 
 exports = { 
     evaluate,
