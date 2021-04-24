@@ -15,6 +15,8 @@ function lexer(expression) {
     let regex;
     let match;
 
+    let unknowns = [];
+
     while (index < expression.length) {
         if (expression[index] === ' ') index++;
 
@@ -80,6 +82,9 @@ function lexer(expression) {
                 type: node_types.VARIABLE,
                 name: expression[index]
             });
+            if (!unknowns.includes(expression[index])) {
+                unknowns.push(expression[index]);
+            }
             index++;
         } else {
             let regex = /\d+(\.\d+)?/;
@@ -95,7 +100,7 @@ function lexer(expression) {
             }
         }
     }
-    return tokens;
+    return tokens, unknowns;
 }
 
 module.exports = { lexer };
