@@ -100,21 +100,30 @@ function lexer(expression) {
             }
         }
     }
-    return tokens, unknowns;
+    return [tokens, unknowns];
 }
 
 module.exports = { lexer };
 
 if (!module.parent) {
     let str = "((x + 5) / (3 - y))";
-    console.log(str);
-    console.log(lexer(str));
+    let [tokens, unknowns] = lexer(str);
+
+    console.log(`Expression: ${str}`);
+    console.log(`Tokens: `, tokens);
+    console.log(`Unknowns: ${unknowns}`);
 
     str = "(-(-x + 5) / (-3 + y))";
-    console.log(str);
-    console.log(lexer(str));
+    [tokens, unknowns] = lexer(str);
+    
+    console.log(`Expression: ${str}`);
+    console.log(`Tokens: `, tokens);
+    console.log(`Unknowns: ${unknowns}`);
 
-    str = "(x + 3 * x)(-9 - x)"
-    console.log(str);
-    console.log(lexer(str));
+    str = "(x + 3 * x)(-9 - x)";
+    [tokens, unknowns] = lexer(str);
+
+    console.log(`Expression: ${str}`);
+    console.log(`Tokens: `, tokens);
+    console.log(`Unknowns: ${unknowns}`);
 }

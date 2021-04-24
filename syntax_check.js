@@ -52,17 +52,27 @@ const { lexer } = require('./lexer.js');
 
 if (!module.parent) {
     let str = "((x + 5) / (3 - y))";
-    console.log(str);
-    console.log(lexer(str));
-    console.log(syntax_check(lexer(str)));
+    let [tokens, unknowns] = lexer(str);
+
+    console.log(`Expression: ${str}`);
+    console.log(`Tokens: `, lexer(str));
+    console.log(`Unknowns encountered: ${unknowns}`);
+    console.log(`Tokens after syntax check: `, syntax_check(tokens));
 
     str = "(-(-x + 5) / (-3 + y))";
-    console.log(str);
-    console.log(lexer(str));
-    console.log(syntax_check(lexer(str)));
+    [tokens, unknowns] = lexer(str);
 
-    str = "+4(x + 3x)(-9 - x)"
-    console.log(str);
-    console.log(lexer(str));
-    console.log(syntax_check(lexer(str)));
+    console.log(`Expression: ${str}`);
+    console.log(`Tokens: `, lexer(str));
+    console.log(`Unknowns encountered: ${unknowns}`);
+    console.log(`Tokens after syntax check: `, syntax_check(tokens));
+    
+    str = "+4(x + 3x)(-9 - x)";
+    [tokens, unknowns] = lexer(str);
+
+    console.log(`Expression: ${str}`);
+    console.log(`Tokens: `, lexer(str));
+    console.log(`Unknowns encountered: ${unknowns}`);
+    console.log(`Tokens after syntax check: `, syntax_check(tokens));
+    
 }

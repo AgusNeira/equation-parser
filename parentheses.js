@@ -31,17 +31,29 @@ const { syntax_check } = require('./syntax_check.js');
 
 if (!module.parent) {
     let str = "((x + 5) / (3 - y))";
-    console.log(str);
-    console.log(syntax_check(lexer(str)));
-    console.log(parentheses(syntax_check(lexer(str))));
+    let [ tokens, unknowns ] = lexer(str);
+    tokens = syntax_check(tokens);
+    let parenthesised = parentheses(tokens);
+
+    console.log(`Expression: ${str}`);
+    console.log(`Tokens: `, tokens);
+    console.log(`Analysis: `, parenthesised);
 
     str = "(-(-x + 5) / (-3 + y))";
-    console.log(str);
-    console.log(syntax_check(lexer(str)));
-    console.log(parentheses(syntax_check(lexer(str))));
+    [ tokens, unknowns ] = lexer(str);
+    tokens = syntax_check(tokens);
+    parenthesised = parentheses(tokens);
 
-    str = "+4(x + 3x)(-9 - x)"
-    console.log(str);
-    console.log(syntax_check(lexer(str)));
-    console.log(parentheses(syntax_check(lexer(str))));
+    console.log(`Expression: ${str}`);
+    console.log(`Tokens: `, tokens);
+    console.log(`Analysis: `, parenthesised);
+    
+    str = "+4(x + 3x)(-9 - x)";
+    [ tokens, unknowns ] = lexer(str);
+    tokens = syntax_check(tokens);
+    parenthesised = parentheses(tokens);
+
+    console.log(`Expression: ${str}`);
+    console.log(`Tokens: `, tokens);
+    console.log(`Analysis: `, parenthesised);
 }

@@ -107,14 +107,33 @@ const { syntax_check } = require('./syntax_check.js');
 
 if (!module.parent) {
     let str = "((x + 5) / (3 - y))";
-    console.log(str);
-    console.dir(parse(syntax_check(lexer(str))), { depth: null });
+    let [tokens, unknowns] = lexer(str);
+    tokens = syntax_check(tokens);
+    let tree = parse(tokens);
+
+    console.log(`Expression: ${str}`);
+    console.log("Tree: ");
+    console.dir(tree, { depth: null });
+    console.log(`Unknowns encountered: ${unknowns}`);
 
     str = "(-(-x + 5) / (-3 + y))";
-    console.log(str);
-    console.dir(parse(syntax_check(lexer(str))), { depth: null });
+    [tokens, unknowns] = lexer(str);
+    tokens = syntax_check(tokens);
+    tree = parse(tokens);
 
-    str = "+4(x + 3x)(-9 - x)"
-    console.log(str);
-    console.dir(parse(syntax_check(lexer(str))), { depth: null });
+    console.log(`Expression: ${str}`);
+    console.log("Tree: ");
+    console.dir(tree, { depth: null });
+    console.log(`Unknowns encountered: ${unknowns}`);
+    
+    str = "+4(x + 3x)(-9 - x)";
+    [tokens, unknowns] = lexer(str);
+    tokens = syntax_check(tokens);
+    tree = parse(tokens);
+
+    console.log(`Expression: ${str}`);
+    console.log("Tree: ");
+    console.dir(tree, { depth: null });
+    console.log(`Unknowns encountered: ${unknowns}`);
+    
 }
