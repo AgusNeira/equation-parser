@@ -1,4 +1,4 @@
-export function parentheses(tokens) {
+function parentheses(tokens) {
     let parens = [];
     let level = 0;
     for (let i = 0; i < tokens.length; i++) {
@@ -24,11 +24,12 @@ export function parentheses(tokens) {
     return parens;
 }
 
-import { fileURLToPath } from 'url';
-import { lexer } from './lexer.mjs';
-import { syntax_check } from './syntax_check.mjs';
+module.exports = { parentheses };
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+const { lexer } = require('./lexer.js');
+const { syntax_check } = require('./syntax_check.js');
+
+if (!module.parent) {
     let str = "((x + 5) / (3 - y))";
     console.log(str);
     console.log(syntax_check(lexer(str)));

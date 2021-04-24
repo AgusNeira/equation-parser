@@ -1,4 +1,4 @@
-import { parentheses } from './parentheses.mjs';
+const { parentheses } = require('./parentheses.js');
 
 const binary_operators = {
     '+': 1, '-': 1,
@@ -49,7 +49,7 @@ const parseBinaryExpression = precedence => (node, index, siblings) => {
     return index + 1;
 }
 
-export function parse(tokens) {
+function parse(tokens) {
     let parse_tree = tokens.slice();
 
     const node_types = {
@@ -100,11 +100,12 @@ export function parse(tokens) {
     return parse_tree[0];
 }
 
-import { fileURLToPath } from 'url';
-import { lexer } from './lexer.mjs';
-import { syntax_check } from './syntax_check.mjs';
+module.exports = { parse };
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+const { lexer } = require('./lexer.js');
+const { syntax_check } = require('./syntax_check.js');
+
+if (!module.parent) {
     let str = "((x + 5) / (3 - y))";
     console.log(str);
     console.dir(parse(syntax_check(lexer(str))), { depth: null });
