@@ -1,3 +1,17 @@
+/*
+ * Lexer
+ *
+ * This is the first step of the expression parser. Its purpose is to receive
+ * the character string as it comes, and to generate an array of tokens.
+ * Each token will have a type, that determines if said token is a plain
+ * number, an operator, an unknown (variable) or a brace. Attached to 
+ * the type is the string that corresponds to it, that will be needed to
+ * properly evaluate each part of the expression. Excluding white spaces,
+ * the output of this function can be used to reconstruct the expression
+ * as it was.
+ *
+ */
+
 function lexer(expression) {
     const node_types = {
         LITERAL: 'literal',
