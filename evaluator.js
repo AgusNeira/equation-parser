@@ -9,6 +9,12 @@
  * that operates that specific node.
  * The `evaluate` function returns a function that takes the values of
  * unknowns present in the expression, and returns a numerical result.
+ *
+ * On the other hand, fastEvaluate does a similar job, but skips the
+ * generation of the evaluation tree and calculates the result directly.
+ * This solution may be faster when there is only one calculation to be
+ * done, whereas the normal evaluator should be faster when calculating
+ * multiple times the same expression.
  */
 
 const { lexer } = require('./lexer.js');
