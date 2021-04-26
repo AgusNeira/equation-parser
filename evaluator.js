@@ -56,14 +56,17 @@ function evaluate(expression) {
 
     traverse(evaluate_tree, unknowns);
 
-    return variables => {
-        if (Object.keys(variables).length !== unknowns.length)
-            throw Error(`Incorrect number of values passed: should be ${unknowns.length} and is ${Object.keys(variables).length}`);
-        for (let v of unknowns)
-            if (!variables.hasOwnProperty(v))
-                throw Error(`Missing value for variable ${v}`);
+    return {
+        evaluate: variables => {
+            if (Object.keys(variables).length !== unknowns.length)
+                throw Error(`Incorrect number of values passed: should be ${unknowns.length} and is ${Object.keys(variables).length}`);
+            for (let v of unknowns)
+                if (!variables.hasOwnProperty(v))
+                    throw Error(`Missing value for variable ${v}`);
         
-        return evaluate_tree.fn(variables);
+            return evaluate_tree.fn(variables);
+        },
+        unknowns
     };
 }
 
@@ -74,17 +77,17 @@ if (!module.parent) {
     let expression = evaluate(str);
 
     console.log(`Expression: ${str}`);
-    console.log(`Result with x=2 and y=5: ${expression({ x: 2, y: 5 })}`);
+    console.log(`Result with x=2 and y=5: ${expression.evaluate({ x: 2, y: 5 })}`);
 
     str = "(-(-x + 5) / (-3 + y))";
     expression = evaluate(str);
 
     console.log(`Expression: ${str}`);
-    console.log(`Result with x=2 and y=5: ${expression({ x: 2, y: 5 })}`);
+    console.log(`Result with x=2 and y=5: ${expression.evaluate({ x: 2, y: 5 })}`);
 
     str = "+4(x + 3x)(-9 - x)";
     expression = evaluate(str);
 
     console.log(`Expression: ${str}`);
-    console.log(`Result with x=2: ${expression({ x: 2 })}`);
+    console.log(`Result with x=2: ${expression.evaluate({ x: 2 })}`);
 }
