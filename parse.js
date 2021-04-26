@@ -1,3 +1,12 @@
+/*
+ * Parser
+ *
+ * The most important module. It takes the token list produced from the
+ * lexer and depurated by the syntax checker, and generates an expression
+ * tree, that takes into account operator precedence and has the
+ * appropiate structure to be traversed and evaluated.
+ */
+
 const { parentheses } = require('./parentheses.js');
 
 const binary_operators = {
