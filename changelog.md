@@ -1,9 +1,9 @@
 # Changelog
 
-*1.0.0 -> 1.0.1*
+*1.0.1 -> 1.0.2*
 
-- Expected variables no longer need to be specified when evaluating an
-expression, since they are deducted from the expression itself
-- Documentation for all modules
-- Fixed `syntax_check` module, which didn't properly check for operators at
-the end of a string.
+- Implemented FastEvaluate function, which calculates the given expression
+without generating an evaluation tree
+- Documentation updated
+- Added a performance analysis in the evaluate module, which compares the
+time the different approaches to evaluation take.

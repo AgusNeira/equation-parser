@@ -9,44 +9,50 @@
  * that operates that specific node.
  * The `evaluate` function returns a function that takes the values of
  * unknowns present in the expression, and returns a numerical result.
+ *
+ * On the other hand, fastEvaluate does a similar job, but skips the
+ * generation of the evaluation tree and calculates the result directly.
+ * This solution may be faster when there is only one calculation to be
+ * done, whereas the normal evaluator should be faster when calculating
+ * multiple times the same expression.
  */
 
 const { lexer } = require('./lexer.js');
 const { syntax_check } = require('./syntax_check.js');
 const { parse } = require('./parse.js');
 
-function traverse(node) {
-    if (node.type === 'block') {
-        traverse(node.child[0]);
-        node.fn = variables => node.child[0].fn(variables);
-    } else if (node.type === 'unary_operator') {
-        traverse(node.child);
-        
-        if (node.operator === '+')
-            node.fn = vars => node.child.fn(vars);
-        else if (node.operator === '-')
-            node.fn = vars => -node.child.fn(vars);
-    } else if (node.type === 'binary_operator'){
-        traverse(node.left);
-        traverse(node.right);
-        
-        if (node.operator === '+')
-            node.fn = vars => node.left.fn(vars) + node.right.fn(vars);
-        else if (node.operator === '-')
-            node.fn = vars => node.left.fn(vars) - node.right.fn(vars);
-        else if (node.operator === '*')
-            node.fn = vars => node.left.fn(vars) * node.right.fn(vars);
-        else if (node.operator === '/')
-            node.fn = vars => node.left.fn(vars) / node.right.fn(vars);
-        else if (node.operator === '^')
-            node.fn = vars => node.left.fn(vars) ** node.right.fn(vars);
-    } else if (node.type === 'literal') {
-        node.fn = vars => parseInt(node.value, 10);
-    } else if (node.type === 'variable')
-        node.fn = vars => vars[node.name];
-}
-
 function evaluate(expression) {
+    function traverse(node) {
+        if (node.type === 'block') {
+            traverse(node.child[0]);
+            node.fn = variables => node.child[0].fn(variables);
+        } else if (node.type === 'unary_operator') {
+            traverse(node.child);
+            
+            if (node.operator === '+')
+                node.fn = vars => node.child.fn(vars);
+            else if (node.operator === '-')
+                node.fn = vars => -node.child.fn(vars);
+        } else if (node.type === 'binary_operator'){
+            traverse(node.left);
+            traverse(node.right);
+            
+            if (node.operator === '+')
+                node.fn = vars => node.left.fn(vars) + node.right.fn(vars);
+            else if (node.operator === '-')
+                node.fn = vars => node.left.fn(vars) - node.right.fn(vars);
+            else if (node.operator === '*')
+                node.fn = vars => node.left.fn(vars) * node.right.fn(vars);
+            else if (node.operator === '/')
+                node.fn = vars => node.left.fn(vars) / node.right.fn(vars);
+            else if (node.operator === '^')
+                node.fn = vars => node.left.fn(vars) ** node.right.fn(vars);
+        } else if (node.type === 'literal') {
+            node.fn = vars => parseInt(node.value, 10);
+        } else if (node.type === 'variable')
+            node.fn = vars => vars[node.name];
+    }
+
     let [tokens, unknowns] = lexer(expression);
     tokens = syntax_check(tokens);
     let parse_tree = parse(tokens);
@@ -56,35 +62,93 @@ function evaluate(expression) {
 
     traverse(evaluate_tree, unknowns);
 
-    return variables => {
-        if (Object.keys(variables).length !== unknowns.length)
-            throw Error(`Incorrect number of values passed: should be ${unknowns.length} and is ${Object.keys(variables).length}`);
-        for (let v of unknowns)
-            if (!variables.hasOwnProperty(v))
-                throw Error(`Missing value for variable ${v}`);
+    return {
+        calc: variables => {
+            if (Object.keys(variables).length !== unknowns.length)
+                throw Error(`Incorrect number of values passed: should be ${unknowns.length} and is ${Object.keys(variables).length}`);
+            for (let v of unknowns)
+                if (!variables.hasOwnProperty(v))
+                    throw Error(`Missing value for variable ${v}`);
         
-        return evaluate_tree.fn(variables);
+            return evaluate_tree.fn(variables);
+        },
+        unknowns
     };
 }
 
-module.exports = { evaluate };
+function fastEvaluate(expression, values) {
+    function traverse(node, values) {
+        if (node.type === 'block') return traverse(node.child[0], values);
+        else if (node.type === 'unary_operator') {
+            if (node.operator === '+') return traverse(node.child, values);
+            else if (node.operator === '-') return -traverse(node.child, values);
+        } else if (node.type === 'binary_operator') {
+            if (node.operator === '+')
+                return traverse(node.left, values) + traverse(node.right, values);
+            else if (node.operator === '-')
+                return traverse(node.left, values) - traverse(node.right, values);
+            else if (node.operator === '*')
+                return traverse(node.left, values) * traverse(node.right, values);
+            else if (node.operator === '/')
+                return traverse(node.left, values) / traverse(node.right, values);
+        } else if (node.type === 'literal') 
+            return parseInt(node.value, 10);
+        else if (node.type === 'variable') return values[node.name];
+    }
+
+    let [tokens, unknowns] = lexer(expression);
+    tokens = syntax_check(tokens);
+    let parse_tree = parse(tokens);
+
+    // Checking for correct values passed
+    if (Object.keys(values).length !== unknowns.length)
+        throw Error(`Incorrect number of values passed: should be ${unknowns.length} and is ${Object.keys(values).length}`);
+    for (let v of unknowns)
+        if (!values.hasOwnProperty(v))
+            throw Error(`Missing value for variable ${v}`);
+
+    return traverse(parse_tree, values);
+}
+
+module.exports = { evaluate, fastEvaluate };
+
+const { functionsTime } = require('./functions_time.js');
 
 if (!module.parent) {
-    let str = "((x + 5) / (3 - y))";
-    let expression = evaluate(str);
+    
+    if (process.argv.length > 3 && process.argv[2] === 'time') {
+        const times = process.argv[3];
+        let str = '((x + 5) / (3 - y))';
+        let expression = evaluate(str);
 
-    console.log(`Expression: ${str}`);
-    console.log(`Result with x=2 and y=5: ${expression({ x: 2, y: 5 })}`);
+        let time1 = functionsTime(evaluate, times, str);
+        let time2 = functionsTime(expression.calc, times, { x: 2, y: 5 });
+        let time3 = functionsTime(fastEvaluate, times, str, { x: 2, y: 5 });
 
-    str = "(-(-x + 5) / (-3 + y))";
-    expression = evaluate(str);
+        console.log(`Timestamps over ${times} iterations:
+        Evaluation tree generation: ${time1}ms
+        Calculation with tree: ${time2}ms
+        Fast calculation: ${time3}ms`);
+    } else {
+        let str = "((x + 5) / (3 - y))";
+        let expression = evaluate(str);
 
-    console.log(`Expression: ${str}`);
-    console.log(`Result with x=2 and y=5: ${expression({ x: 2, y: 5 })}`);
+        console.log(`Expression: ${str}`);
+        console.log(`Result with x=2 and y=5: ${expression.calc({ x: 2, y: 5 })}`);
+        console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2, y: 5 })}`);
 
-    str = "+4(x + 3x)(-9 - x)";
-    expression = evaluate(str);
+        str = "(-(-x + 5) / (-3 + y))";
+        expression = evaluate(str);
 
-    console.log(`Expression: ${str}`);
-    console.log(`Result with x=2: ${expression({ x: 2 })}`);
+        console.log(`Expression: ${str}`);
+        console.log(`Result with x=2 and y=5: ${expression.calc({ x: 2, y: 5 })}`);
+        console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2, y: 5 })}`);
+
+        str = "+4(x + 3x)(-9 - x)";
+        expression = evaluate(str);
+
+        console.log(`Expression: ${str}`);
+        console.log(`Result with x=2: ${expression.calc({ x: 2 })}`);
+        console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2})}`);
+    }
 }
