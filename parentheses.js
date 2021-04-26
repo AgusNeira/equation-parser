@@ -1,3 +1,11 @@
+/*
+ * Parentheses
+ *
+ * This module is auxiliar to the parsing chain. It helps analyze every
+ * pair of parenthesis in the token chain, and gives information about
+ * where it starts, where it ends and at which level the block is.
+ */
+
 function parentheses(tokens) {
     let parens = [];
     let level = 0;
