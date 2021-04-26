@@ -1,3 +1,16 @@
+/*
+ * Evaluator
+ *
+ * This module is actually focused on getting a numerical result from
+ * the expression, but embeds the functionality of the preceding ones 
+ * (lexer, syntax_checker and parse). Thus, its main method takes an
+ * expression (string) and generates an evaluation tree. This tree is
+ * similar to the parse tree, but each of its nodes have a `fn` method
+ * that operates that specific node.
+ * The `evaluate` function returns a function that takes the values of
+ * unknowns present in the expression, and returns a numerical result.
+ */
+
 const { lexer } = require('./lexer.js');
 const { syntax_check } = require('./syntax_check.js');
 const { parse } = require('./parse.js');
