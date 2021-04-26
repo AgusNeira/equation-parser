@@ -63,7 +63,7 @@ function evaluate(expression) {
     traverse(evaluate_tree, unknowns);
 
     return {
-        evaluate: variables => {
+        calc: variables => {
             if (Object.keys(variables).length !== unknowns.length)
                 throw Error(`Incorrect number of values passed: should be ${unknowns.length} and is ${Object.keys(variables).length}`);
             for (let v of unknowns)
@@ -112,25 +112,43 @@ function fastEvaluate(expression, values) {
 
 module.exports = { evaluate, fastEvaluate };
 
+const { functionsTime } = require('./functions_time.js');
+
 if (!module.parent) {
-    let str = "((x + 5) / (3 - y))";
-    let expression = evaluate(str);
+    
+    if (process.argv.length > 3 && process.argv[2] === 'time') {
+        const times = process.argv[3];
+        let str = '((x + 5) / (3 - y))';
+        let expression = evaluate(str);
 
-    console.log(`Expression: ${str}`);
-    console.log(`Result with x=2 and y=5: ${expression.evaluate({ x: 2, y: 5 })}`);
-    console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2, y: 5 })}`);
+        let time1 = functionsTime(evaluate, times, str);
+        let time2 = functionsTime(expression.calc, times, { x: 2, y: 5 });
+        let time3 = functionsTime(fastEvaluate, times, str, { x: 2, y: 5 });
 
-    str = "(-(-x + 5) / (-3 + y))";
-    expression = evaluate(str);
+        console.log(`Timestamps over ${times} iterations:
+        Evaluation tree generation: ${time1}ms
+        Calculation with tree: ${time2}ms
+        Fast calculation: ${time3}ms`);
+    } else {
+        let str = "((x + 5) / (3 - y))";
+        let expression = evaluate(str);
 
-    console.log(`Expression: ${str}`);
-    console.log(`Result with x=2 and y=5: ${expression.evaluate({ x: 2, y: 5 })}`);
-    console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2, y: 5 })}`);
+        console.log(`Expression: ${str}`);
+        console.log(`Result with x=2 and y=5: ${expression.calc({ x: 2, y: 5 })}`);
+        console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2, y: 5 })}`);
 
-    str = "+4(x + 3x)(-9 - x)";
-    expression = evaluate(str);
+        str = "(-(-x + 5) / (-3 + y))";
+        expression = evaluate(str);
 
-    console.log(`Expression: ${str}`);
-    console.log(`Result with x=2: ${expression.evaluate({ x: 2 })}`);
-    console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2})}`);
+        console.log(`Expression: ${str}`);
+        console.log(`Result with x=2 and y=5: ${expression.calc({ x: 2, y: 5 })}`);
+        console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2, y: 5 })}`);
+
+        str = "+4(x + 3x)(-9 - x)";
+        expression = evaluate(str);
+
+        console.log(`Expression: ${str}`);
+        console.log(`Result with x=2: ${expression.calc({ x: 2 })}`);
+        console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2})}`);
+    }
 }
