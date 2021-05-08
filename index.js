@@ -1,5 +1,5 @@
-const { evaluate } = require('./evaluate.mjs');
-const { parse } = require('./parse.mjs');
+const { evaluate } = require('./evaluate.js');
+const { parse } = require('./parse.js');
 
 exports = { 
     evaluate,
