@@ -111,38 +111,3 @@ function parse(tokens) {
 
 module.exports = { parse };
 
-const { lexer } = require('./lexer.js');
-const { syntax_check } = require('./syntax_check.js');
-
-if (!module.parent) {
-    let str = "((x + 5) / (3 - y))";
-    let [tokens, unknowns] = lexer(str);
-    tokens = syntax_check(tokens);
-    let tree = parse(tokens);
-
-    console.log(`Expression: ${str}`);
-    console.log("Tree: ");
-    console.dir(tree, { depth: null });
-    console.log(`Unknowns encountered: ${unknowns}`);
-
-    str = "(-(-x + 5) / (-3 + y))";
-    [tokens, unknowns] = lexer(str);
-    tokens = syntax_check(tokens);
-    tree = parse(tokens);
-
-    console.log(`Expression: ${str}`);
-    console.log("Tree: ");
-    console.dir(tree, { depth: null });
-    console.log(`Unknowns encountered: ${unknowns}`);
-    
-    str = "+4(x + 3x)(-9 - x)";
-    [tokens, unknowns] = lexer(str);
-    tokens = syntax_check(tokens);
-    tree = parse(tokens);
-
-    console.log(`Expression: ${str}`);
-    console.log("Tree: ");
-    console.dir(tree, { depth: null });
-    console.log(`Unknowns encountered: ${unknowns}`);
-    
-}

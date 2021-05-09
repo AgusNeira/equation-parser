@@ -119,25 +119,3 @@ function lexer(expression) {
 
 module.exports = { lexer };
 
-if (!module.parent) {
-    let str = "((x + 5) / (3 - y))";
-    let [tokens, unknowns] = lexer(str);
-
-    console.log(`Expression: ${str}`);
-    console.log(`Tokens: `, tokens);
-    console.log(`Unknowns: ${unknowns}`);
-
-    str = "(-(-x + 5) / (-3 + y))";
-    [tokens, unknowns] = lexer(str);
-    
-    console.log(`Expression: ${str}`);
-    console.log(`Tokens: `, tokens);
-    console.log(`Unknowns: ${unknowns}`);
-
-    str = "(x + 3 * x)(-9 - x)";
-    [tokens, unknowns] = lexer(str);
-
-    console.log(`Expression: ${str}`);
-    console.log(`Tokens: `, tokens);
-    console.log(`Unknowns: ${unknowns}`);
-}

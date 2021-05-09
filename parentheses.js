@@ -33,35 +33,3 @@ function parentheses(tokens) {
 }
 
 module.exports = { parentheses };
-
-const { lexer } = require('./lexer.js');
-const { syntax_check } = require('./syntax_check.js');
-
-if (!module.parent) {
-    let str = "((x + 5) / (3 - y))";
-    let [ tokens, unknowns ] = lexer(str);
-    tokens = syntax_check(tokens);
-    let parenthesised = parentheses(tokens);
-
-    console.log(`Expression: ${str}`);
-    console.log(`Tokens: `, tokens);
-    console.log(`Analysis: `, parenthesised);
-
-    str = "(-(-x + 5) / (-3 + y))";
-    [ tokens, unknowns ] = lexer(str);
-    tokens = syntax_check(tokens);
-    parenthesised = parentheses(tokens);
-
-    console.log(`Expression: ${str}`);
-    console.log(`Tokens: `, tokens);
-    console.log(`Analysis: `, parenthesised);
-    
-    str = "+4(x + 3x)(-9 - x)";
-    [ tokens, unknowns ] = lexer(str);
-    tokens = syntax_check(tokens);
-    parenthesised = parentheses(tokens);
-
-    console.log(`Expression: ${str}`);
-    console.log(`Tokens: `, tokens);
-    console.log(`Analysis: `, parenthesised);
-}
