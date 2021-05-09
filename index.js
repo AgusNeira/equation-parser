@@ -1,4 +1,4 @@
-const { evaluate } = require('./evaluate.js');
+const { evaluate } = require('./evaluator.js');
 const { parse } = require('./parse.js');
 
 exports = { 
