@@ -38,7 +38,28 @@ function syntax_check(tokens) {
             if (i !== tokens.length - 1 &&
                 (tokens[i + 1].type === 'binary_operator' ||
                 tokens[i + 1].type === 'unary_operator')) {
-                throw Error(`Cannot parse consecutive operators at index ${i}`);
+                    // Replace '--' and '++' with '+', and '+-' and '-+' with '-'
+                    if ((tokens[i].operator === '+' || tokens[i].operator === '-') && 
+                        (tokens[i + 1].operator === '+' || tokens[i + 1].operator === '-')){
+                        if (tokens[i].operator !== tokens[i + 1].operator) {
+                            tokens.splice(i, 2, {
+                                type: tokens[i].type,
+                                operator: '-'
+                            });
+                        } else {
+                            tokens.splice(i, 2, {
+                                type: tokens[i].type,
+                                operator: '+'
+                            });
+                        }
+                    // Allowing for '/-', '/+', '*+' and '*-', enforcing the second operator
+                        // to be unary
+                    } else if ((tokens[i].operator === '*' || tokens[i].operator === '/') &&
+                            (tokens[i + 1].operator === '+' || tokens[i + 1].operator === '-')) {
+                        tokens[i + 1].type = 'unary_operator';
+                    } else {
+                        throw Error(`Cannot parse consecutive operators at index ${i}`);
+                    }
             }
         } else if (tokens[i].type === 'literal') {
             if (i !== tokens.length - 1 &&
