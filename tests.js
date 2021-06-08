@@ -1,6 +1,6 @@
 const { lexer } = require('./lexer.js');
 const { syntax_check } = require('./syntax_check.js');
-const { parsentheses } = require('./parentheses.js');
+const { parentheses } = require('./parentheses.js');
 const { parse } = require('./parse.js');
 const { evaluate, fastEvaluate } = require('./evaluator.js');
 const { functionsTime } = require('./functions_time.js');
@@ -29,7 +29,7 @@ function testLexer() {
 }
 
 function testSyntaxCheck() {
-    let str = "((x + 5) / (3 - y))";
+    let str = "((x + 5) / -(3 - y))";
     let [tokens, unknowns] = lexer(str);
 
     console.log(`Expression: ${str}`);
@@ -37,7 +37,7 @@ function testSyntaxCheck() {
     console.log(`Unknowns encountered: ${unknowns}`);
     console.log(`Tokens after syntax check: `, syntax_check(tokens));
 
-    str = "(-(-x + 5) / (-3 + y))";
+    str = "(-(-x ++ 5) / +(-3 +- y))";
     [tokens, unknowns] = lexer(str);
 
     console.log(`Expression: ${str}`);
@@ -45,7 +45,7 @@ function testSyntaxCheck() {
     console.log(`Unknowns encountered: ${unknowns}`);
     console.log(`Tokens after syntax check: `, syntax_check(tokens));
     
-    str = "+4(x + 3x)(-9 - x)";
+    str = "+4(x + 3x) * -(-9 -+ x)";
     [tokens, unknowns] = lexer(str);
 
     console.log(`Expression: ${str}`);
@@ -92,7 +92,7 @@ function testParentheses() {
 }
 
 function testParser() {
-    let str = "((x + 5) / (3 - y))";
+    let str = "((x + 5) / -(3 - y))";
     let [tokens, unknowns] = lexer(str);
     tokens = syntax_check(tokens);
     let tree = parse(tokens);
@@ -102,7 +102,7 @@ function testParser() {
     console.dir(tree, { depth: null });
     console.log(`Unknowns encountered: ${unknowns}`);
 
-    str = "(-(-x + 5) / (-3 + y))";
+    str = "(-(-x + 5) / +(-3 + y))";
     [tokens, unknowns] = lexer(str);
     tokens = syntax_check(tokens);
     tree = parse(tokens);
@@ -127,7 +127,7 @@ function testEvaluator() {
     
     console.log('PERFORMANCE EVALUATION');
 
-    const times = process.argv[3];
+    const times = process.argv[3] || 10000;
     let str = '((x + 5) / (3 - y))';
     let expression = evaluate(str);
 
@@ -164,13 +164,30 @@ function testEvaluator() {
     console.log(`Fast evaluation: ${fastEvaluate(str, { x: 2})}`);
 }
 
-console.log('****************************** LEXER TEST ********************************');
-testLexer();
-console.log('************************** SYNTAX CHECK TEST *****************************');
-testSyntaxCheck();
-console.log('*************************** PARENTHESES TEST *****************************');
-testParentheses();
-console.log('****************************** PARSER TEST *******************************');
-testParser();
-console.log('**************************** EVALUATOR TEST ******************************');
-testEvaluator();
+if (process.argv[2] === 'lexer') {
+    console.log('****************************** LEXER TEST ********************************');
+    testLexer();
+} else if (process.argv[2] === 'syntax') {
+    console.log('************************** SYNTAX CHECK TEST *****************************');
+    testSyntaxCheck();
+} else if (process.argv[2] === 'parentheses') {
+    console.log('*************************** PARENTHESES TEST *****************************');
+    testParentheses();
+} else if (process.argv[2] === 'parser') {
+    console.log('****************************** PARSER TEST *******************************');
+    testParser();
+} else if (process.argv[2] === 'evaluator') {
+    console.log('**************************** EVALUATOR TEST ******************************');
+    testEvaluator();
+} else {
+    console.log('****************************** LEXER TEST ********************************');
+    testLexer();
+    console.log('************************** SYNTAX CHECK TEST *****************************');
+    testSyntaxCheck();
+    console.log('*************************** PARENTHESES TEST *****************************');
+    testParentheses();
+    console.log('****************************** PARSER TEST *******************************');
+    testParser();
+    console.log('**************************** EVALUATOR TEST ******************************');
+    testEvaluator();
+}
