@@ -1,6 +1,6 @@
 {
   "name": "neiras-expression-parser",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "A small module to parse and evaluate user-provided mathematical expressions with or without unknowns",
   "main": "index.js",
   "scripts": {
