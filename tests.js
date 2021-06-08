@@ -142,8 +142,8 @@ function testEvaluator() {
 
     console.log('RESULT EVALUATION');
 
-    let str = "((x + 5) / (3 - y))";
-    let expression = evaluate(str);
+    str = "((x + 5) / (3 - y))";
+    expression = evaluate(str);
 
     console.log(`Expression: ${str}`);
     console.log(`Result with x=2 and y=5: ${expression.calc({ x: 2, y: 5 })}`);
