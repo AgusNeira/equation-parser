@@ -1,5 +1,5 @@
 {
-  "name": "neiras-expression-parser",
+  "name": "unknown-parser",
   "version": "1.0.0",
   "description": "A small module to parse and evaluate user-provided mathematical expressions with or without unknowns",
   "main": "index.js",
