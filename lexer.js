@@ -101,12 +101,12 @@ function lexer(expression) {
             }
             index++;
         } else {
-            let regex = /\d+(\.\d+)?/;
+            let regex = /\d+([\.,]\d+)?/;
             match = regex.exec(expression.slice(index));
             if (match) {
                 tokens.push({
                     type: node_types.LITERAL,
-                    value: match[0]
+                    value: match[0].replace(',', '.')
                 });
                 index += match[0].length;
             } else {

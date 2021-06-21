@@ -1,9 +1,7 @@
 # Changelog
 
-*1.0.1 -> 1.0.2*
+*1.0.1*
 
-- Implemented FastEvaluate function, which calculates the given expression
-without generating an evaluation tree
-- Documentation updated
-- Added a performance analysis in the evaluate module, which compares the
-time the different approaches to evaluation take.
+- Exporting problem on index.js fixed
+- Evaluator can now parse decimal numbers properly
+- Using a comma instead of a dot for decimals will be interpreted correctly

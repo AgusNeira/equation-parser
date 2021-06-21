@@ -6,14 +6,14 @@ const { evaluate, fastEvaluate } = require('./evaluator.js');
 const { functionsTime } = require('./functions_time.js');
 
 function testLexer() {
-    let str = "((x + 5) / (3 - y))";
+    let str = "((x + 5) / (3,5 - y))";
     let [tokens, unknowns] = lexer(str);
 
     console.log(`Expression: ${str}`);
     console.log(`Tokens: `, tokens);
     console.log(`Unknowns: ${unknowns}`);
 
-    str = "(-(-x + 5) / (-3 + y))";
+    str = "(-(-x + 5) / (-3.5 + y))";
     [tokens, unknowns] = lexer(str);
     
     console.log(`Expression: ${str}`);
@@ -112,7 +112,17 @@ function testParser() {
     console.dir(tree, { depth: null });
     console.log(`Unknowns encountered: ${unknowns}`);
     
-    str = "+4(x + 3x)(-9 - x)";
+    str = "+4(x + 0.3x)(-9 - x)";
+    [tokens, unknowns] = lexer(str);
+    tokens = syntax_check(tokens);
+    tree = parse(tokens);
+
+    console.log(`Expression: ${str}`);
+    console.log("Tree: ");
+    console.dir(tree, { depth: null });
+    console.log(`Unknowns encountered: ${unknowns}`);
+
+    str = "0.3x";
     [tokens, unknowns] = lexer(str);
     tokens = syntax_check(tokens);
     tree = parse(tokens);

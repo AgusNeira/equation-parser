@@ -48,7 +48,7 @@ function evaluate(expression) {
             else if (node.operator === '^')
                 node.fn = vars => node.left.fn(vars) ** node.right.fn(vars);
         } else if (node.type === 'literal') {
-            node.fn = vars => parseInt(node.value, 10);
+            node.fn = vars => parseFloat(node.value, 10);
         } else if (node.type === 'variable')
             node.fn = vars => vars[node.name];
     }
