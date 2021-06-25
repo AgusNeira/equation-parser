@@ -2,6 +2,11 @@
 
 Esta librería está diseñada para interpretar y evaluar expresiones matemáticas. De momento es capaz de soportar los operadores básicos (`+`, `-`, `*`, `/` y `^`). Vea la sección issues para ver los progresos planificados para el proyecto.
 
+## Instalación
+```bash
+npm install --save unknown-parser
+```
+
 ## Uso
 
 ### Evaluate
